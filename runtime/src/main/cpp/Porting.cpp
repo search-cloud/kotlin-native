@@ -62,14 +62,9 @@ void consoleErrorUtf8(const void* utf8, uint32_t sizeBytes) {
 }
 
 uint32_t consoleReadUtf8(void* utf8, uint32_t maxSizeBytes) {
-#ifdef KONAN_WASM
-  // TODO: So where exactly shoud we read from in javascript?
-  abort();
-#else
   char* result = ::fgets(reinterpret_cast<char*>(utf8), maxSizeBytes - 1, stdin);
   if (result == nullptr) return 0;
   return ::strlen(result);
-#endif
 }
 
 // Process execution.

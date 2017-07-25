@@ -39,6 +39,12 @@ var konan_dependencies = {
         abort: function() {
             throw "abort()";
         },
+        // TODO: Account for fd and size.
+        fgets: function(str, size, fd) {
+            if (fd != 0) throw ("read(" + fd + ", ...)");
+            fromString(utf8encode(read()), str);
+            return str;
+        },
         morecore_current_limit: function() {
             return instance.exports.memory.buffer.byteLength;
         },
@@ -52,7 +58,7 @@ var konan_dependencies = {
         },
         // TODO: Account for fd and size.
         write: function(fd, str, size) {
-            if (fd != 1 && fd != 2) throw ("write(" + fd +", ...)")
+            if (fd != 1 && fd != 2) throw ("write(" + fd + ", ...)");
             // TODO: There is no writeErr() in d8. 
             // Approximate it with write() to stdout for now.
             write(utf8decode(toString(str))); // TODO: write() d8 specific.
