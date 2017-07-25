@@ -6,7 +6,8 @@ var global_arguments = arguments;
 var exit_status = 0;
 
 function print_usage() {
-    print('Usage: d8 --expose-wasm runtime.js -- <program.wasm> <program arg1> <program arg2> ...')
+    // TODO: any reliable way to obtain the current script name?
+    print('Usage: d8 --expose-wasm launcher.js -- <program.wasm> <program arg1> <program arg2> ...')
     quit(1); // TODO: this is d8 specific
 }
 
@@ -59,6 +60,8 @@ var konan_dependencies = {
         }
     }
 };
+
+if (arguments.length < 1) print_usage();
 
 module = new WebAssembly.Module(new Uint8Array(readbuffer(arguments[0])));
 module.env = {};
