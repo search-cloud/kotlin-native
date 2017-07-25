@@ -215,9 +215,6 @@ extern "C" {
     void __assert_fail(void) { abort(); }
     void __errno_location(void) { }
 
-    void fmodf(void) {}
-    void fmod(void) {}
-
     void *memcpy(void *dst, const void *src, size_t n) {
         for (long i = 0; i != n; ++i)
             *((char*)dst + i) = *((char*)src + i);

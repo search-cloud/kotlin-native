@@ -50,7 +50,6 @@ var konan_dependencies = {
             var arg = utf8encode(global_arguments[index]);
             fromString(arg, ptr)
         },
-        pow: Math.pow, // This is for snprintf implementation.
         // TODO: Account for fd and size.
         write: function(fd, str, size) {
             if (fd != 1 && fd != 2) throw ("write(" + fd +", ...)")
