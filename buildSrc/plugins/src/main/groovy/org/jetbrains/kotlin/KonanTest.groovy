@@ -234,7 +234,7 @@ fun handleExceptionContinuation(x: (Throwable) -> Unit): Continuation<Any?> = ob
                 args arguments
             }
             if (testData != null) {
-                standardInput = new ByteArrayInputStream(testData.bytes)
+                standardInput = new ByteArrayInputStream(testDataFilter(testData).bytes)
             }
             standardOutput = out
 
@@ -266,6 +266,11 @@ fun handleExceptionContinuation(x: (Throwable) -> Unit): Continuation<Any?> = ob
         } 
 
         if (!exitCodeMismatch && !goldValueMismatch && this.expectedFail) println("Unexpected pass")
+    }
+
+    String testDataFilter(String testData) {
+        if (target == KonanTarget.WASM32) return testData + '\n'
+        return testData
     }
     
     List<String> executionCommandLine(String exe) {
