@@ -199,16 +199,48 @@ long getpagesize() {
 
 extern "C" {
 #ifdef KONAN_WASM
+    extern void Konan_abort(const char*);
 
-    // These are stubs to shut up wasm linkage issues.
-    void _ZNKSt3__220__vector_base_commonILb1EE20__throw_length_errorEv(void) {}
-    void _ZNKSt3__221__basic_string_commonILb1EE20__throw_length_errorEv(void) {}
-    void _ZNSt3__26chrono12steady_clock3nowEv(void) {}
-    int _ZNSt3__212__next_primeEm(int n) {
-        return n+2;
+    // TODO: get rid of these.
+    void _ZNKSt3__220__vector_base_commonILb1EE20__throw_length_errorEv(void) {
+        Konan_abort("TODO: throw_length_error not implemented.");
     }
-    void __assert_fail(void) { abort(); }
-    void __errno_location(void) { }
+    void _ZNKSt3__221__basic_string_commonILb1EE20__throw_length_errorEv(void) {
+        Konan_abort("TODO: throw_length_error not implemented.");
+    }
+    void _ZNSt3__26chrono12steady_clock3nowEv(void) {
+        Konan_abort("TODO: Time primitives are not yet available for this target.");
+    }
+    int _ZNSt3__212__next_primeEm(unsigned long n) {
+        static unsigned long primes[] = {
+                11UL,
+                101UL, 
+                1009UL, 
+                10007UL, 
+                100003UL, 
+                1000003UL, 
+                10000019UL,
+                100000007UL,
+                1000000007UL
+        };
+        unsigned long prime = primes[0];
+        for (unsigned long i=0; i<sizeof(primes)/sizeof(unsigned long); i++) {
+            prime = primes[i];
+            if (prime >= n) break;
+        }
+        return prime;
+    }
+    void __assert_fail(const char * assertion, const char * file, unsigned int line, const char * function) {
+        char buf[1024];
+        konan::snprintf(buf, sizeof(buf), "%s:%d in %s: runtime assert: %s\n", file, line, function, assertion);
+        Konan_abort(buf);
+    }
+    int* __errno_location() {
+        static int theErrno = 0;
+        return &theErrno;
+    }
+
+    // Some string.h functions.
 
     void *memcpy(void *dst, const void *src, size_t n) {
         for (long i = 0; i != n; ++i)

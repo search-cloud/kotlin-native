@@ -39,14 +39,16 @@ var konan_dependencies = {
         abort: function() {
             throw "abort()";
         },
-        // TODO: Account for fd and size.
-        fgets: function(str, size, fd) {
-            if (fd != 0) throw ("read(" + fd + ", ...)");
-            fromString(utf8encode(read()), str);
+        // TODO: Account for file and size.
+        fgets: function(str, size, file) {
+            fromString(utf8encode(readline()), str);
             return str;
         },
         morecore_current_limit: function() {
             return instance.exports.memory.buffer.byteLength;
+        },
+        Konan_abort: function(pointer) {
+            throw ("Konan_abort(" + utf8decode(toString(pointer)) + ")")
         },
         Konan_js_arg_size: function(index) {
             if (index >= global_arguments.length) return -1;
@@ -56,6 +58,7 @@ var konan_dependencies = {
             var arg = utf8encode(global_arguments[index]);
             fromString(arg, ptr)
         },
+        stdin: 0, // This is for fgets(,,stdin) to resolve. It is ignored.
         // TODO: Account for fd and size.
         write: function(fd, str, size) {
             if (fd != 1 && fd != 2) throw ("write(" + fd + ", ...)");
