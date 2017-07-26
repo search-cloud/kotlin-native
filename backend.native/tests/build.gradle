@@ -180,7 +180,6 @@ task slackReport(type:Reporter) {
 }
 
 task sum (type:RunKonanTest) {
-    expectedFail = (project.testTarget == 'wasm32') // The test fails.
     source = "codegen/function/sum.kt"
 }
 
@@ -415,14 +414,12 @@ task hello0(type: RunKonanTest) {
 }
 
 task hello1(type: RunKonanTest) {
-    expectedFail = (project.testTarget == 'wasm32') // The test fails on wasm32.
     goldValue = "Hello World"
     testData = "Hello World"
     source = "runtime/basic/hello1.kt"
 }
 
 task hello2(type: RunKonanTest) {
-    expectedFail = (project.testTarget == 'wasm32') // The test fails on wasm32.
     goldValue = "you entered 'Hello World'"
     testData = "Hello World"
     source = "runtime/basic/hello2.kt"
@@ -1923,7 +1920,6 @@ task deserialized_listof0(type: RunKonanTest) {
 }
 
 task deserialized_members(type: LinkKonanTest) {
-    expectedFail = (project.testTarget == 'wasm32') // The test fails.
     goldValue=
         "first level\n"+
         "second level\n"+
